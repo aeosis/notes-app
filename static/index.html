@@ -56,7 +56,10 @@ sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
             <div class="note-footer">
                 <button type="button" class="close" aria-label="Delete">
                     <span aria-hidden="true" class="fa fa-trash-o text-danger"></span>
-                </button>            
+                </button>  
+                <button type="button" class="btn btn-primary" aria-label="Save">
+                    Save
+                </button>				
             </div>
           </div>
           <div class="note">
@@ -110,7 +113,42 @@ sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
     </footer>
     <script>
       (function () {
-        
+	    let myButton = document.querySelector(".btn.btn-primary");
+		myButton.addEventListener("click",function (e) {
+		//myButton.onclick = function (e){
+			e.preventDefault();
+			createNoteDiv();
+		});
+      	function createNoteDiv() {
+		    let myNode = document.querySelector(".note");
+			let myClonedNode = myNode.cloneNode(true);
+			myClonedNode.querySelector('.btn.btn-primary').addEventListener("click", function () {
+				let myNoteText = myClonedNode.querySelector(".note-text").textContent;
+				addNote(myNoteText);
+			});
+			let row = document.querySelector(".row");
+			row.append(myClonedNode);
+		}
+		function addNote(myNote) {
+			let xhr = new XMLHttpRequest();
+			xhr.open("POST", "/api/notes");
+			xhr.setRequestHeader("Content-Type", "application/json");
+			xhr.onload = function () {
+				//let myWeatherData = JSON.parse(xhr.responseText);
+				//let textData = myWeatherData.currentWeather.text;
+				//document.querySelector("#weather").textContent = textData;
+				//alainasWeatherDisplay.textContent = textData;
+			};
+			let noteObject = {
+				note: myNote
+			};
+			let payload = JSON.stringify(noteObject);
+			xhr.send(payload);
+		}
+		//addNote("Alaina's note");
+		//addNote("Alaina's note 2");
+		//addNote("Bird!");
+	//createNoteDiv();
       })();
     </script>
   </body>
